@@ -1,0 +1,77 @@
+<html>
+
+<head>
+  <link href="css/app.css" rel="stylesheet">
+  <script type="text/javascript" src="lib/d3.min.js"></script>
+  <script type="text/javascript" src="lib/ractive.min.js"></script>
+  <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="lib/topojson.js"></script>
+  <script type="text/javascript" src="js/world.js"></script>
+  <script type="text/javascript" src="js/sample.js"></script>
+  <script type="text/javascript" src="locale/en_US.json"></script>
+  <script type="text/javascript" src="locale/de.json"></script>
+
+  <style type="text/css">
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    overflow: hidden;
+  }
+
+  #viz {
+    position:fixed; top:0; left:0; width: 100%; height: 100%;
+  }
+
+  #viz svg {
+    width: 100%;
+    height: 100%;
+  }
+  </style>
+</head>
+
+<body>
+  <div id="vis-container"></div>
+  </svg>    
+  
+  <script id="vistmpl" type="text/ractive">
+    <svg id="map" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <defs>
+        <filter id="blur">
+          <feGaussianBlur stdDeviation="{{1/zoom}}"></feGaussianBlur>
+        </filter>
+      </defs>
+      <g id="map" transform="translate({{translateX * scale}}, {{translateY * scale}}) scale({{zoom * scale}})">
+        <g id="countries">
+        {{#each countries}}
+          <g><path d="{{geopath(.)}}" stroke-opacity="0" /></g>
+        {{/each}}
+        </g>
+        <g id="peers" filter="url(#blur)">
+        {{#each peers:id}}
+          <g class="peer" id="{{id}}">
+            <path class="peer {{mode}} {{connected ? 'connected' : ''}}" d="{{pointpath({type: 'Point', coordinates: [lon, lat]})}}" />
+          </g>
+        {{/each}}
+      </g>
+      {{#each connections}}
+        <path class="connection" d="{{cpath(peers[give], peers[get])}}" stroke-width="{{1/zoom}}px"/>
+      {{/each}}
+      </g>
+    </svg>
+
+    <div style="display: none;">
+      {{#each countries}}
+        {{#if alpha2}}
+          <div id="ctt{{alpha2}}" class="vis"><div class="header">{{i18n(alpha2)}}</div></div>
+        {{/if}}
+      {{/each}}
+    </div>
+  </script>
+  
+  <script type="text/javascript" src="js/viz.js"></script>
+  <script type="text/javascript" src="js/simulate.js"></script>
+</body>
+
+</html>
