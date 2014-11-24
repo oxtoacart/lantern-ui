@@ -15,7 +15,7 @@ setInterval(function() {
 
   updates += 1;
   
-}, 25)
+}, 5)
 
 setInterval(function() {
   var updatesPerSecond = Math.round(updates * 1000 / 500);
