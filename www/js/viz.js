@@ -38,6 +38,7 @@ var viz = new Ractive({
     zoom: 1,
     connections: connections,
     cpath: cpath,
+    updatesPerSecond: 0,
   }
 });
 
